@@ -1,14 +1,14 @@
-from django.forms import ModelForm
+from django import forms
 from .models import Task, Category
 
 
-class TaskForm(ModelForm):
+class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = '__all__'
+        exclude = ['category']
 
 
-class CategoryForm(ModelForm):
+class CategoryForm(forms.ModelForm):
     class Meta:
         model: Category
         fields = ['name']
