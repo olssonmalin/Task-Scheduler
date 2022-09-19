@@ -36,3 +36,8 @@ def add_task(request):
 def show_tasks(request):
     tasks = Task.objects.all()
     return render(request, 'all_tasks.html', {'tasks': tasks})
+
+
+def show_single_task(request, id=1):
+    task = Task.objects.get(id=id)
+    return render(request, "single_task.html", {'task': task})

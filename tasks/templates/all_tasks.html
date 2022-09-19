@@ -1,5 +1,9 @@
 {% include "header.html" %}
 
-<div>{{ tasks }}</div>
+<div>
+    {% for task in tasks %}
+    <a href="{% url 'single task' task.id %}">{{ task.description }}</a>
+    {% endfor %}
+</div>
 
 {% include "footer.html" %}

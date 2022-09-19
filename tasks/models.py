@@ -3,7 +3,7 @@ from django.core.validators import MaxValueValidator
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, primary_key=True)
 
     def __str__(self) -> str:
         return self.name
@@ -21,8 +21,8 @@ class Task(models.Model):
 
     description = models.CharField(max_length=200)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    start = models.DateField()  # add default?
-    deadline = models.DateField()  # add default?
+    start = models.DateField("Start date")  # add default?
+    deadline = models.DateField("Deadline")  # add default?
     estimated_duration = models.IntegerField(default=0)
     actual_duration = models.IntegerField(default=0)
     status = models.CharField(
