@@ -3,7 +3,7 @@ from django.core.validators import MaxValueValidator
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50, primary_key=True)
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self) -> str:
         return self.name

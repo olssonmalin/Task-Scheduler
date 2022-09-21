@@ -2,7 +2,12 @@
 
 <div>
     <h2>{{ task.description }}</h2>
-
+    <h3>{{ task.category }}</h3>
+    <p>{{ task.start }}</p>
+    <p>{{ task.deadline }}</p>
+    <p>{{ task.get_status_display }}</p>
+    <p>{{ task.estimated_duration }}</p>
+    <p>{{ task.actual_duration }}</p>
 </div>
 
 {% include "footer.html" %}

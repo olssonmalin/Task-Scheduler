@@ -1,0 +1,16 @@
+{% include "header.html" %}
+
+<div>
+    <ul>
+        {% for category in categories %}
+        <li>
+            <p>{{ category.name }}</p>
+            <a href="{% url 'remove category' category.id %}">X</a>
+            <a href="{% url 'update category' category.id %}">Edit</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+{% include "footer.html" %}

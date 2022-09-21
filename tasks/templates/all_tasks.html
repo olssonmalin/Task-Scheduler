@@ -1,9 +1,17 @@
 {% include "header.html" %}
 
 <div>
-    {% for task in tasks %}
-    <a href="{% url 'single task' task.id %}">{{ task.description }}</a>
-    {% endfor %}
+    <ul>
+        {% for task in tasks %}
+        <li>
+            <a href="{% url 'single task' task.id %}">{{ task.description }}</a>
+            <p>{{ task.get_status_display }}</p>
+            <a href="{% url 'remove task' task.id %}">X</a>
+            <a href="{% url 'update task' task.id %}">Edit</a>
+        </li>
+        {% endfor %}
+    </ul>
+
 </div>
 
 {% include "footer.html" %}

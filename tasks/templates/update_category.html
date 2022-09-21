@@ -1,0 +1,9 @@
+{% include "header.html" %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <label for="category">Category</label>
+    <input name="category" type="text" value="{{ category.name }}">
+    <input type="submit">
+</form>
+{% include "footer.html" %}
