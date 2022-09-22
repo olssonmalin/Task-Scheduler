@@ -1,6 +1,9 @@
 {% include "header.html" %}
 
 <div>
+    {% if not tasks %}
+    <p>No Task to show, add new task <a href="{% url 'add task'%}">here</a> </p>
+    {% endif %}
     <ul>
         {% for task in tasks %}
         <li>

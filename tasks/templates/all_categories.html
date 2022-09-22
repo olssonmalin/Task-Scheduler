@@ -2,6 +2,9 @@
 
 <div>
     <ul>
+        {% if not categories %}
+        <p>No categories to show</p>
+        {% endif %}
         {% for category in categories %}
         <li>
             <p>{{ category.name }}</p>

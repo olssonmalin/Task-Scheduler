@@ -1,4 +1,3 @@
-from unicodedata import category
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
@@ -71,11 +70,11 @@ def remove_task(request, id):
     return redirect('all tasks')
 
 
-def remove_category(request, name):
+def remove_category(request, id):
     """
     Removes category with requested id
     """
-    Category.objects.get(name=name).delete()
+    Category.objects.get(id=id).delete()
     return redirect('all categories')
 
 
@@ -105,7 +104,7 @@ def update_task(request, id):
     task_form = TaskForm(instance=task)
     current_category = task.category
     categories = Category.objects.all()
-    return render(request, "update_task.html", {'form': task_form, 'categories': categories, 'current_category': current_category})
+    return render(request, "update_task.html", {'form': task_form, 'categories': categories, 'current_category': current_category, 'task': task})
 
 
 def update_category(request, id):

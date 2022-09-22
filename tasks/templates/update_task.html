@@ -1,6 +1,6 @@
 {% include "header.html" %}
 
-<form action="" method="POST">
+<form action="" method="POST" autocomplete="off">
     {% csrf_token %}
     {{form}}
     <label for="category">Category</label>
