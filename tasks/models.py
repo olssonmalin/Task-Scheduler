@@ -33,7 +33,6 @@ class Task(models.Model):
 
 
 class Availability(models.Model):
-    # Change primary key?
 
     MONDAY = "MO"
     TUESDAY = "TU"

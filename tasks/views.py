@@ -33,6 +33,7 @@ def add_task(request):
                             status=data['status']
                             )
             new_task.save()
+            return redirect('all tasks')
     categories = Category.objects.all()
     return render(request, "add_task.html", {"form": form, 'categories': categories})
 

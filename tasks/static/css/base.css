@@ -1,0 +1,44 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: sans-serif;
+    color: black;
+}
+
+ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+ul li {
+    display: flex;
+    align-items: center;
+}
+
+p,
+a {
+    margin-right: 5px;
+    /* text-decoration: none; */
+}
+
+a {
+    color: black;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+}
+
+label {
+    margin-top: 10px;
+}
+
+input {
+    margin-bottom: 10px;
+}
