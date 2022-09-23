@@ -1,17 +1,27 @@
 {% include "header.html" %}
 
 <div>
+    <h2>All Categories</h2>
     <ul>
         {% if not categories %}
         <p>No categories to show</p>
         {% endif %}
-        {% for category in categories %}
-        <li>
-            <p>{{ category.name }}</p>
-            <a href="{% url 'remove category' category.id %}">Delete</a>
-            <a href="{% url 'update category' category.id %}">Edit</a>
-        </li>
-        {% endfor %}
+        <table>
+            <thead>
+                <th>Name</th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                    <td><a href="{% url 'remove category' category.id %}">Delete</a></td>
+                    <td><a href="{% url 'update category' category.id %}">Edit</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </ul>
 
 </div>

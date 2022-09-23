@@ -3,11 +3,32 @@
 <div>
     <h2>{{ task.description }}</h2>
     <h3>{{ task.category }}</h3>
-    <p>{{ task.start }}</p>
-    <p>{{ task.deadline }}</p>
-    <p>{{ task.get_status_display }}</p>
-    <p>{{ task.estimated_duration }}</p>
-    <p>{{ task.actual_duration }}</p>
+    <table>
+        <tbody>
+            <tr>
+                <td>Start date:</td>
+                <td>{{ task.start }}</td>
+            </tr>
+            <tr>
+                <td>Deadline:</td>
+                <td>{{ task.deadline }}</td>
+            </tr>
+            <tr>
+                <td>Status:</td>
+                <td>{{ task.get_status_display }}</td>
+            </tr>
+            <tr>
+                <td>Estimated duration:</td>
+                <td>{{ task.estimated_duration }}</td>
+            </tr>
+            <tr>
+                <td>Actual duration:</td>
+                <td>{{ task.actual_duration }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button><a href="{% url 'all tasks'%}">Back</a></button>
 </div>
 
 {% include "footer.html" %}
