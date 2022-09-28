@@ -1,5 +1,6 @@
+from calendar import SATURDAY
 from django.db import models
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Category(models.Model):
@@ -34,23 +35,21 @@ class Task(models.Model):
 
 class Availability(models.Model):
 
-    MONDAY = "MO"
-    TUESDAY = "TU"
-    WEDNESDAY = "WE"
-    THURSDAY = "TH"
-    FRIDAY = "FR"
-    SATURDAY = "SA"
-    SUNDAY = "SU"
+    monday = models.PositiveIntegerField(
+        "Monday", validators=[MaxValueValidator(24), MinValueValidator(0)])
+    tuesday = models.PositiveIntegerField(
+        "Tuesday", validators=[MaxValueValidator(24), MinValueValidator(0)])
+    wednesday = models.PositiveIntegerField(
+        "Wednesday", validators=[MaxValueValidator(24), MinValueValidator(0)])
+    thursday = models.PositiveIntegerField(
+        "Thursday", validators=[MaxValueValidator(24), MinValueValidator(0)])
+    friday = models.PositiveIntegerField(
+        "Friday", validators=[MaxValueValidator(24), MinValueValidator(0)])
+    saturday = models.PositiveIntegerField(
+        "Saturday", validators=[MaxValueValidator(24), MinValueValidator(0)])
+    sunday = models.PositiveIntegerField(
+        "Sunday", validators=[MaxValueValidator(24), MinValueValidator(0)])
 
-    DAYS = (
-        (MONDAY, "Monday"),
-        (TUESDAY, "Tuesday"),
-        (WEDNESDAY, "Wednesday"),
-        (THURSDAY, "Thursday"),
-        (FRIDAY, "Friday"),
-        (SATURDAY, "Saturday"),
-        (SUNDAY, "Sunday")
-    )
-
-    day = models.CharField(max_length=2, choices=DAYS, primary_key=True)
-    hours = models.PositiveIntegerField(validators=[MaxValueValidator(24)])
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super(Availability, self).save(*args, **kwargs)

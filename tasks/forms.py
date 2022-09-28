@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task, Category
+from .models import Availability, Task
 
 
 class TaskForm(forms.ModelForm):
@@ -12,7 +12,8 @@ class TaskForm(forms.ModelForm):
         }
 
 
-# class CategoryForm(forms.ModelForm):
-#     class Meta:
-#         model: Category
-#         fields = ['name']
+class AvailabilityForm(forms.ModelForm):
+    class Meta:
+        model = Availability
+        fields = "__all__"
+

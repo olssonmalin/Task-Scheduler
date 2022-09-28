@@ -12,5 +12,6 @@ urlpatterns = [
     path('category/all', views.show_categories, name='all categories'),
     path('category/<int:id>', views.remove_category, name='remove category'),
     path('category/update/<int:id>',
-         views.update_category, name='update category')
+         views.update_category, name='update category'),
+    path('profile/', views.profile, name='profile')
 ]

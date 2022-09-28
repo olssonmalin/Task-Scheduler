@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.db.models import Q
 
-from .models import Task, Category
-from .forms import TaskForm
+from .models import Availability, Task, Category
+from .forms import AvailabilityForm, TaskForm
 
 
 def index(request):
@@ -37,12 +38,27 @@ def add_task(request):
     categories = Category.objects.all()
     return render(request, "add_task.html", {"form": form, 'categories': categories})
 
+def search_tasks(request):
+    """
+    Renders template that shows all tasks as a list
+    """
+    q = request.GET['q']
+    if q is not None and q != '':
+        categories = Category.objects.filter(name__contains=q).values_list('id', flat=True)
+        q_category = Q(category__in=list(categories))
+        q_description = Q(description__contains=q)
+        tasks = Task.objects.filter(q_description | q_category)
+    return tasks
+
 
 def show_tasks(request):
     """
     Renders template that shows all tasks as a list
     """
-    tasks = Task.objects.all()
+    if 'q' in request.GET:
+        tasks = search_tasks(request)
+    else:
+        tasks = Task.objects.all()
     return render(request, 'all_tasks.html', {'tasks': tasks})
 
 
@@ -117,3 +133,21 @@ def update_category(request, id):
         category.save()
         return redirect('all categories')
     return render(request, "update_category.html", {'category': category})
+
+
+def profile(request):
+    """Profile view, shows form for availability"""
+    try:
+        availability = Availability.objects.get(id=1)
+        form = AvailabilityForm(instance=availability)
+        if request.method == 'POST':
+            form = AvailabilityForm(request.POST, instance=availability)
+            if form.is_valid():
+                form.save()
+    except:
+        form = AvailabilityForm()
+        if request.method == 'POST':
+            form = AvailabilityForm(request.POST)
+            if form.is_valid():
+                form.save()
+    return render(request, "profile.html", {"form": form})
