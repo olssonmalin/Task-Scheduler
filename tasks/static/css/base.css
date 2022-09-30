@@ -62,3 +62,19 @@ th,
 td {
     padding: 12px 15px;
 }
+
+.container {
+    align-self: stretch;
+}
+
+.show-element {
+    display: none;
+    background-color: #ffffff;
+    position: absolute;
+    height: 200px;
+    width: 200px;
+    left: calc(50vw - 200px);
+    top: calc(20vh);
+    border: 3px solid black;
+    padding: 15px;
+}

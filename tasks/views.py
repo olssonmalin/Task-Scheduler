@@ -1,13 +1,28 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Q
+from django.core import serializers
 
 from .models import Availability, Task, Category
 from .forms import AvailabilityForm, TaskForm
-
+import plotly.express as px
+import pandas as pd
 
 def index(request):
-    return render(request, "index.html")
+    tasks = Task.objects.all()
+    # data = serializers.serialize('json', tasks)
+
+    df = pd.DataFrame([
+    dict(Task="Job A", Start='2009-01-01', Finish='2009-02-28', Resource="Alex"),
+    dict(Task="Job B", Start='2009-03-05', Finish='2009-04-15', Resource="Alex"),
+    dict(Task="Job C", Start='2009-02-20', Finish='2009-05-30', Resource="Max")
+    ])
+
+    fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task", color="Resource")
+    fig.update_yaxes(autorange="reversed")
+    chart = fig.to_html()
+    
+    return render(request, "timeline.html", {'data': chart})
 
 
 def add_task(request):
@@ -78,6 +93,18 @@ def show_single_task(request, id=1):
     task = Task.objects.get(id=id)
     return render(request, "single_task.html", {'task': task})
 
+def add_time_task(request, id):
+    """
+    Adds elapsed time to task
+    """
+    task = Task.objects.get(id=id)
+    if request.method == "POST":
+        elapsed_hours = task.actual_duration
+        add_hours = request.POST['hours']
+        sum_hours = elapsed_hours + int(add_hours)
+        task.actual_duration = sum_hours
+        task.save()
+    return redirect('all tasks')
 
 def remove_task(request, id):
     """

@@ -9,6 +9,7 @@ urlpatterns = [
     path('task/<int:id>', views.show_single_task, name='single task'),
     path('task/remove/<int:id>', views.remove_task, name='remove task'),
     path('task/update/<int:id>', views.update_task, name='update task'),
+    path('task/add-hours/<int:id>', views.add_time_task, name='add time'),
     path('category/all', views.show_categories, name='all categories'),
     path('category/<int:id>', views.remove_category, name='remove category'),
     path('category/update/<int:id>',

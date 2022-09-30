@@ -1,37 +1,17 @@
-{% include "header.html" %}
+{% extends "base.html" %}
 
-<div>
-    {% if not tasks %}
-    <p>No tasks to show </p>
-    {% endif %}
-    <form>
-        <label for="q">Search</label>
-        <input type="text" name="q">
-        <input type="submit">
-    </form>
-    <h2>All Tasks</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Description</th>
-                <th>Status</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for task in tasks %}
-            <tr>
-                <td><a href="{% url 'single task' task.id %}">{{ task.description }}</a></td>
-                <td>{{ task.get_status_display }}</td>
-                <td><a href="{% url 'remove task' task.id %}">Delete</a></td>
-                <td><a href="{% url 'update task' task.id %}">Edit</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% block main %}
 
-    <button><a href="{% url 'add task'%}">Add task</a></button>
-</div>
+{% if not tasks %}
+<p>No tasks to show </p>
+{% else %}
 
-{% include "footer.html" %}
+{% include "components/search_tasks_form.html" %}
+
+{% include "components/all_tasks_table.html" %}
+
+{% endif %}
+
+<button><a href="{% url 'add task'%}">Add task</a></button>
+
+{% endblock main %}
