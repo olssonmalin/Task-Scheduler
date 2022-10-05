@@ -1,4 +1,8 @@
-{% include "header.html" %}
+{% extends "base.html" %}
+
+{% block main %}
+<pre>{{ task.get_date_range }}</pre>
+<pre>{{ task.time_left }}</pre>
 
 <div>
     <h2>{{ task.description }}</h2>
@@ -31,4 +35,4 @@
     <button><a href="{% url 'all tasks'%}">Back</a></button>
 </div>
 
-{% include "footer.html" %}
+{% endblock %}

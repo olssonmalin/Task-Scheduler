@@ -1,6 +1,8 @@
 from calendar import SATURDAY
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
+from datetime import datetime, timedelta, date
 
 
 class Category(models.Model):
@@ -29,6 +31,70 @@ class Task(models.Model):
     status = models.CharField(
         max_length=2, choices=STATUS, default=not_started)
 
+        
+    def get_date_range(self):
+        start = self.start if self.start > date.today() else date.today()
+        delta = self.deadline - start  # as timedelta
+        days = [start + timedelta(days=i) for i in range(delta.days + 1)]
+        return days
+
+    def get_avg_per_day(self):
+        days = len(self.get_date_range())
+        hours_left = self.estimated_duration - self.actual_duration
+        return hours_left/days
+
+    def get_hours_range(self, range):
+        saved_range = self.get_date_range()
+        total = 0
+        for day in range:
+            if day in saved_range:
+                total += self.get_avg_per_day()
+        return total
+
+    def get_new_deadline(self):
+        while not self.enough_time():
+            self.deadline = self.deadline + timedelta(days = 1)
+        return self.deadline
+    
+    def avalible_hours(self):
+        availability = Availability.objects.get(id=1).as_list()
+        hours = 0
+        for day in self.get_date_range():
+            hours += availability[day.weekday()]
+        return hours
+            
+
+    def time_left(self):
+        # all_tasks = __class__.objects.exclude(id=self.id).filter(start__lte=self.start, deadline__gte=self.start).filter(start__lte=self.deadline, deadline__gte=self.deadline)
+        all_tasks = __class__.objects.exclude(id=self.id)
+        available_time = self.avalible_hours()
+        range = self.get_date_range()
+        for task in all_tasks:
+            if task.status == "C":
+                continue
+            available_time -= task.get_hours_range(range)
+        total = (available_time - self.estimated_duration) + self.actual_duration
+        return total
+    
+    def enough_time(self):
+        if self.time_left() >= 0:
+            return True
+        all_tasks = __class__.objects.exclude(id=self.id)
+        for task in all_tasks:
+            if task.status == "C":
+                continue
+            if task.time_left() - self.estimated_duration >= 0:
+                return True
+        return False
+
+    def clean(self) -> None:
+        if self.deadline < self.start:
+            raise ValidationError({'deadline': ('Deadline may not be prior to start date')})
+        if not self.enough_time():
+            raise ValidationError({'deadline': (f'Not enough time to complete task before deadline, next possible deadline: {self.get_new_deadline()}')})
+        return super().clean()
+        
+
     def __str__(self) -> str:
         return self.description
 
@@ -49,6 +115,17 @@ class Availability(models.Model):
         "Saturday", validators=[MaxValueValidator(24), MinValueValidator(0)])
     sunday = models.PositiveIntegerField(
         "Sunday", validators=[MaxValueValidator(24), MinValueValidator(0)])
+
+    def as_list(self):
+        return [
+            self.monday,
+            self.tuesday,
+            self.wednesday,
+            self.thursday,
+            self.friday,
+            self.saturday,
+            self.sunday
+        ]
 
     def save(self, *args, **kwargs):
         self.pk = 1

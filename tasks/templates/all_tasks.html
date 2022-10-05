@@ -6,9 +6,11 @@
 <p>No tasks to show </p>
 {% else %}
 
-{% include "components/search_tasks_form.html" %}
 
-{% include "components/all_tasks_table.html" %}
+
+{% include "components/task/searchbar.html" %}
+
+{% include "components/task/table_all.html" %}
 
 {% endif %}
 

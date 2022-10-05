@@ -5,15 +5,16 @@ from .exceptions import NoTime
 
 
 class Timeline:
-    """Timeline class"""
+    """Timeline class, double-linked list?"""
 
     def __init__(self, availability) -> None:
-        self.timeline = []
+        self.head = None
+        self.tail = None
         self.availability = availability
         pass
 
     def add_days(self, task):
-        if self.timeline is []:
+        if self.head is None:
             # add days between start and deadline
             pass
         # if first day after start of task
@@ -33,4 +34,4 @@ class Timeline:
                 continue
 
     def get_timeLine(self):
-        return self.timeline
+        pass

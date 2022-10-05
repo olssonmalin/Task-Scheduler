@@ -2,7 +2,11 @@
 {% block main %}
 
 <div>
+    {% if data %}
     {{ data|safe }}
+    {% else %}
+    <p>No tasks added yet, add tasks <a href="{% url 'add task' %}">here</a> to view timeline</p>
+    {% endif %}
 </div>
 
 {% endblock main %}

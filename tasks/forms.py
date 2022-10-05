@@ -1,5 +1,5 @@
 from django import forms
-from .models import Availability, Task
+from .models import Availability, Task, Category
 
 
 class TaskForm(forms.ModelForm):
@@ -10,6 +10,8 @@ class TaskForm(forms.ModelForm):
             'start': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
             'deadline': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'})
         }
+    
+
 
 
 class AvailabilityForm(forms.ModelForm):

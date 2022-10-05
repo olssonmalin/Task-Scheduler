@@ -1,11 +1,11 @@
-{% extends "base.html" %}
-
-{% block main %}
 <form action="" method="POST" autocomplete="off">
+    {% if info %}
+    <pre>{{ info }}</pre>
+    {% endif %}
     {% csrf_token %}
     {{form}}
     <label for="category">Category</label>
-    <input name="category" type="text" list="category" value="{{ current_category }}">
+    <input name="category" type="text" list="category" required>
     <datalist id="category">
         {% for cat in categories %}
         <option value="{{ cat.name }}"></option>
@@ -13,4 +13,3 @@
     </datalist>
     <input type="submit">
 </form>
-{% endblock %}

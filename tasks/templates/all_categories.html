@@ -1,29 +1,14 @@
-{% include "header.html" %}
+{% extends "base.html" %}
 
-<div>
-    <h2>All Categories</h2>
-    <ul>
-        {% if not categories %}
-        <p>No categories to show</p>
-        {% endif %}
-        <table>
-            <thead>
-                <th>Name</th>
-                <th></th>
-                <th></th>
-            </thead>
-            <tbody>
-                {% for category in categories %}
-                <tr>
-                    <td>{{ category.name }}</td>
-                    <td><a href="{% url 'remove category' category.id %}">Delete</a></td>
-                    <td><a href="{% url 'update category' category.id %}">Edit</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </ul>
+{% block main %}
 
-</div>
+<h2>All Categories</h2>
+{% if not categories %}
+<p>No categories to show</p>
+{% else %}
 
-{% include "footer.html" %}
+{% include "components/category/table_all.html" %}
+
+{% endif %}
+
+{% endblock main %}

@@ -1,15 +1,6 @@
-{% include "header.html" %}
+{% extends "base.html" %}
 
-<form action="" method="POST" autocomplete="off">
-    {% csrf_token %}
-    {{form}}
-    <label for="category">Category</label>
-    <input name="category" type="text" list="category">
-    <datalist id="category">
-        {% for cat in categories %}
-        <option value="{{ cat.name }}"></option>
-        {% endfor %}
-    </datalist>
-    <input type="submit">
-</form>
-{% include "footer.html" %}
+{% block main %}
+
+{% include "components/task/form/add.html"%}
+{% endblock %}

@@ -1,28 +1,61 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Q
-from django.core import serializers
+from django.contrib import messages
+
 
 from .models import Availability, Task, Category
 from .forms import AvailabilityForm, TaskForm
 import plotly.express as px
 import pandas as pd
+import datetime
+
 
 def index(request):
     tasks = Task.objects.all()
-    # data = serializers.serialize('json', tasks)
+    context = {}
+    if tasks:
+        colors = {
+            'Not started': '#ff595e',
+            'On going': '#ffca3a',
+            'Completed': '#8ac926'
+        }
+        task_data = [
+            {
+                'Task': task.description,
+                'Start': task.start,
+                'Deadline': task.deadline,
+                'End': task.deadline + datetime.timedelta(days=1),
+                'Status': task.get_status_display(),
+                'Category': task.category.name
+            } for task in tasks
+        ]
 
-    df = pd.DataFrame([
-    dict(Task="Job A", Start='2009-01-01', Finish='2009-02-28', Resource="Alex"),
-    dict(Task="Job B", Start='2009-03-05', Finish='2009-04-15', Resource="Alex"),
-    dict(Task="Job C", Start='2009-02-20', Finish='2009-05-30', Resource="Max")
-    ])
+        df = pd.DataFrame(task_data)
 
-    fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task", color="Resource")
-    fig.update_yaxes(autorange="reversed")
-    chart = fig.to_html()
+        hover = {
+            'Task': True,
+            'Start': True,
+            'Deadline': True,
+            'End': False,
+            'Status': True,
+            'Category': True
+        }
+
+        fig = px.timeline(df, x_start="Start", x_end="End", y="Task", color="Status", color_discrete_map=colors, hover_data=hover)
+        fig.update_yaxes(autorange="reversed")
+        today = datetime.date.today()
+        fig.update_layout(shapes=[
+            dict(
+                type='line',
+                yref='paper', y0=0, y1=1,
+                xref='x', x0=today, x1=today
+            )
+        ])
+        chart = fig.to_html()
+        context['data'] = chart
     
-    return render(request, "timeline.html", {'data': chart})
+    return render(request, "timeline.html", context)
 
 
 def add_task(request):
@@ -30,28 +63,29 @@ def add_task(request):
     Renders template with a form to add a task, 
     accepts post request and and task to db
     """
+    context = {}
     form = TaskForm()
     if request.method == 'POST':
-        try:
-            category = Category.objects.get(name=request.POST['category'])
-        except:
-            category = Category(name=request.POST['category'])
-            category.save()
-        posted_form = TaskForm(request.POST)
-        if posted_form.is_valid():
-            data = request.POST
-            new_task = Task(description=data['description'],
-                            category=category,
-                            start=data['start'],
-                            deadline=data['deadline'],
-                            estimated_duration=data['estimated_duration'],
-                            actual_duration=data['actual_duration'],
-                            status=data['status']
-                            )
-            new_task.save()
-            return redirect('all tasks')
+        form  = TaskForm(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            try:
+                category = Category.objects.get(name=request.POST['category'])
+            except:
+                category = Category(name=request.POST['category'])
+                category.save()
+            obj.category = category
+            if obj.enough_time():
+                obj.save()
+                messages.add_message(request, messages.SUCCESS, 'Task was added sucessfully')
+                return redirect('all tasks')
+            else:
+                suggested_deadline = obj.get_new_deadline()
+                messages.add_message(request, messages.ERROR, f'Not enough time to complete task before deadline, next possible deadline is {suggested_deadline}')
     categories = Category.objects.all()
-    return render(request, "add_task.html", {"form": form, 'categories': categories})
+    context['form'] = form
+    context['categories'] = categories
+    return render(request, "add_task.html", context)
 
 def search_tasks(request):
     """
@@ -104,6 +138,7 @@ def add_time_task(request, id):
         sum_hours = elapsed_hours + int(add_hours)
         task.actual_duration = sum_hours
         task.save()
+        messages.add_message(request, messages.SUCCESS, f'{add_hours}h was added to task {task.description}')
     return redirect('all tasks')
 
 def remove_task(request, id):
@@ -111,6 +146,7 @@ def remove_task(request, id):
     Removes task with requested id
     """
     Task.objects.get(id=id).delete()
+    messages.add_message(request, messages.SUCCESS, 'Task was removed successfully')
     return redirect('all tasks')
 
 
@@ -119,6 +155,7 @@ def remove_category(request, id):
     Removes category with requested id
     """
     Category.objects.get(id=id).delete()
+    messages.add_message(request, messages.SUCCESS, 'Category was removed successfully')
     return redirect('all categories')
 
 
@@ -127,25 +164,24 @@ def update_task(request, id):
     updates task with requested id
     """
     task = Task.objects.get(id=id)
-    if request.method == 'POST':
-        try:
-            category = Category.objects.get(name=request.POST['category'])
-        except:
-            category = Category(name=request.POST['category'])
-            category.save()
-        posted_form = TaskForm(request.POST)
-        if posted_form.is_valid():
-            data = request.POST
-            task.description = data['description']
-            task.category = category
-            task.start = data['start']
-            task.deadline = data['deadline']
-            task.estimated_duration = data['estimated_duration']
-            task.actual_duration = data['actual_duration']
-            task.status = data['status']
-            task.save()
-            return redirect('all tasks')
     task_form = TaskForm(instance=task)
+    if request.method == 'POST':
+        form  = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            try:
+                category = Category.objects.get(name=request.POST['category'])
+            except:
+                category = Category(name=request.POST['category'])
+                category.save()
+            obj.category = category
+            if obj.enough_time():
+                obj.save()
+                messages.add_message(request, messages.SUCCESS, 'Task was added sucessfully')
+                return redirect('all tasks')
+            else:
+                suggested_deadline = obj.get_new_deadline()
+                messages.add_message(request, messages.ERROR, f'Not enough time to complete task before deadline, next possible deadline is {suggested_deadline}')        
     current_category = task.category
     categories = Category.objects.all()
     return render(request, "update_task.html", {'form': task_form, 'categories': categories, 'current_category': current_category, 'task': task})

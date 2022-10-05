@@ -13,9 +13,10 @@
         <tr>
             <td><a href="{% url 'single task' task.id %}">{{ task.description }}</a></td>
             <td>{{ task.get_status_display }}</td>
-            <td><a href="{% url 'remove task' task.id %}">Delete</a></td>
+            <td>{% include "components/task/delete.html" %}
+            </td>
             <td><a href="{% url 'update task' task.id %}">Edit</a></td>
-            <td>{% include "components/add_time_form.html" %}</td>
+            <td>{% include "components/task/form/add_time.html" %}</td>
         </tr>
         {% endfor %}
     </tbody>

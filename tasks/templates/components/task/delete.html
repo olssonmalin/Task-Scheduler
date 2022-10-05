@@ -1,0 +1,11 @@
+{% extends "utils/popup.html" %}
+{% block name %}
+Delete
+{% endblock %}
+{% block content %}
+<div>
+    <p>Are you sure you want to delete task: {{task.description}}?</p>
+    <a href="{% url 'all tasks'%}">Cancel</a>
+    <a href="{% url 'remove task' task.id %}">Continue</a>
+</div>
+{% endblock %}

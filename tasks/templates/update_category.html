@@ -1,9 +1,10 @@
-{% include "header.html" %}
+{% extends "base.html" %}
 
+{% block main %}
 <form action="" method="POST" autocomplete="off">
     {% csrf_token %}
     <label for="category">Category</label>
     <input name="category" type="text" value="{{ category.name }}">
     <input type="submit">
 </form>
-{% include "footer.html" %}
+{% endblock %}

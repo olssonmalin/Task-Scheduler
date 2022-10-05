@@ -1,0 +1,17 @@
+<table>
+    <thead>
+        <th>Name</th>
+        <th></th>
+        <th></th>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ category.name }}</td>
+            <td>{% include "components/category/delete.html" %}
+            </td>
+            <td><a href="{% url 'update category' category.id %}">Edit</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
