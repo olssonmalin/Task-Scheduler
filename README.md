@@ -10,6 +10,12 @@ Make sure to have python3 and pip installed
 
 <pre>$ pip install -r requirements.txt </pre>
 
+### Migarte database
+
+<pre>$ python3 manage.py makemigrations</pre>
+
+<pre>$ python3 manage.py migrate</pre>
+
 ### Run
 
 <pre>python3 manage.py runserver</pre>
