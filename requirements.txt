@@ -1,3 +1,4 @@
 Django==4.1.1
 plotly==5.10.0
 pandas==1.5.0
+fontawesomefree==6.2.0

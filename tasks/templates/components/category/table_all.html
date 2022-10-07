@@ -1,16 +1,17 @@
-<table>
+<table class="categories">
     <thead>
         <th>Name</th>
-        <th></th>
         <th></th>
     </thead>
     <tbody>
         {% for category in categories %}
-        <tr>
-            <td>{{ category.name }}</td>
-            <td>{% include "components/category/delete.html" %}
+        <tr class="list-item">
+            <td class="name">{{ category.name }}</td>
+            <td class="list-item-buttons">{% include "components/category/delete.html" %}
+                <a href="{% url 'update category' category.id %}">
+                    <i title="Edit category" class="fa-solid fa-pen-to-square"></i>
+                </a>
             </td>
-            <td><a href="{% url 'update category' category.id %}">Edit</a></td>
         </tr>
         {% endfor %}
     </tbody>

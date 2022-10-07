@@ -1,10 +1,8 @@
 <div class="click-show-container">
-    <button class="click-button-show">
-        {% block name %}
-        {% endblock%}
-    </button>
+    {% block button %}
+    {% endblock%}
     <div class="show-element">
-        <p class="click-button-close">X</p>
+        <i class="fa-solid fa-x click-button-close clickable"></i>
         {% block content %}
         {% endblock%}
     </div>

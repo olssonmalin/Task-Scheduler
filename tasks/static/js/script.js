@@ -1,4 +1,5 @@
 function show(e) {
+    console.log(e.target.parentNode)
     const showElement = e.target.parentNode.querySelector('.show-element');
     showElement.style.display = "block";
 };

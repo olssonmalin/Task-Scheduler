@@ -5,6 +5,6 @@
     {% csrf_token %}
     <label for="category">Category</label>
     <input name="category" type="text" value="{{ category.name }}">
-    <input type="submit">
+    <input type="submit" class="purple-button" value="Submit">
 </form>
 {% endblock %}

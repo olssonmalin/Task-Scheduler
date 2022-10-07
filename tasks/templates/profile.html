@@ -1,9 +1,10 @@
-{% include "header.html" %}
+{% extends "base.html" %}
+{% block main %}
 
 <h2>Profile</h2>
 <form method="POST">
     {% csrf_token %}
     {{form}}
-    <input type="submit">
+    <input class="purple-button" type="submit">
 </form>
-{% include "footer.html" %}
+{% endblock %}

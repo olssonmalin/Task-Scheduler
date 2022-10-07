@@ -1,23 +1,31 @@
-<h2>All Tasks</h2>
 <table class="table-auto">
     <thead>
         <tr>
             <th>Description</th>
+            <th>Category</th>
             <th>Status</th>
-            <th></th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
         {% for task in tasks %}
-        <tr>
-            <td><a href="{% url 'single task' task.id %}">{{ task.description }}</a></td>
-            <td>{{ task.get_status_display }}</td>
-            <td>{% include "components/task/delete.html" %}
+        <tr class="list-item">
+            <td><a class="description" href="{% url 'single task' task.id %}">{{ task.description }}</a></td>
+            <td>
+                <p>{{ task.category }}</p>
             </td>
-            <td><a href="{% url 'update task' task.id %}">Edit</a></td>
-            <td>{% include "components/task/form/add_time.html" %}</td>
+            <td>
+                <p class="status {{ task.status }}">{{ task.get_status_display }}</p>
+            </td>
+            <td class="list-item-buttons">
+                {% include "components/task/delete.html" %}
+                <a href="{% url 'update task' task.id %}">
+                    <i title="Edit category" class="fa-solid fa-pen-to-square"></i>
+                </a>
+                {% include "components/task/form/add_time.html" %}
+            </td>
         </tr>
+        {% empty %}
+        <p>No tasks to show </p>
         {% endfor %}
     </tbody>
 </table>

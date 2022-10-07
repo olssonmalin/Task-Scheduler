@@ -1,12 +1,12 @@
 {% extends "utils/popup.html" %}
-{% block name %}
-Add hours
+{% block button %}
+<i title="Add elapsed time to task" class="fa-solid fa-plus click-button-show clickable"></i>
 {% endblock %}
 {% block content %}
 <form method="POST" class="add-time-form" action="{% url 'add time' task.id %}">
     {% csrf_token %}
-    <label for="hours">Hours to add</label>
-    <input type="number" name="hours" value="0">
-    <input type="submit">
+    <label for="hours">Add elapsed time</label>
+    <input class="input" type="number" name="hours" value="0" min="0">
+    <input class="input" type="submit" value="Add" class="small-button">
 </form>
 {% endblock %}

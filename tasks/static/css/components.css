@@ -1,0 +1,81 @@
+/* TABLES */
+/* TASK */
+table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    color: var(--main-text-color);
+    font-family: var(--main-font);
+    /* min-width: 400px; */
+}
+
+thead tr {
+    text-align: left;
+    font-family: var(--alt-font);
+    font-size: 24;
+    font-weight: 400;
+}
+
+th,
+td {
+    padding: 12px 15px;
+}
+
+.container {
+    align-self: stretch;
+}
+
+.list-item {
+    height: 3em;
+    color: var(--main-text-color);
+    padding: 15px;
+}
+
+.list-item a {
+    color: var(--main-text-color);
+}
+
+.list-item .description {
+    font-size: 20px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.list-item .description:hover {
+    text-decoration: underline;
+}
+
+.list-item i {
+    color: var(--purple-dark);
+    font-size: 20px;
+    padding: 5px;
+}
+
+.list-item .status {
+    padding: 0.25em;
+    color: white;
+    border-radius: 0.25em;
+    font-size: small;
+    display: inline;
+}
+
+.list-item .NS {
+    background-color: var(--red);
+}
+
+.list-item .OG {
+    background-color: var(--yellow);
+}
+
+.list-item .C {
+    background-color: var(--green);
+}
+
+.list-item-buttons {
+    display: flex;
+}
+
+/* CATEGORY */
+
+table .category {
+    width: auto;
+}

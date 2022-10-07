@@ -1,0 +1,58 @@
+.show-element {
+    display: none;
+    background-color: #ffffff;
+    position: absolute;
+    height: 200px;
+    width: 200px;
+    left: calc(50vw - 200px);
+    top: calc(20vh);
+    border: 3px solid black;
+    padding: 15px;
+}
+
+/* BUTTONS */
+
+.purple-button {
+    text-decoration: none;
+    width: fit-content;
+    cursor: pointer;
+    outline: 0;
+    color: var(--light-text-color);
+    background-color: var(--purple);
+    border-color: var(--purple);
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 16px;
+    border-radius: .25rem;
+    height: auto;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.purple-button:hover {
+    color: var(--light-text-color);
+    background-color: var(--purple-dark);
+    border-color: var(--purple-dark);
+}
+
+.small-button {
+    color: var(--main-text-color);
+    background-color: #ffffff;
+    border: 2px solid var(--purple);
+    cursor: pointer;
+    text-align: center;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.small-button:hover {
+    color: var(--light-text-color);
+    background-color: var(--purple);
+}
+
+.clickable {
+    cursor: pointer;
+}

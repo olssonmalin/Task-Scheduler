@@ -1,21 +1,67 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@300;400;500;700&display=swap');
 
 :root {
-    --main-text-color: #242423;
+    --main-text-color: #10002B;
     --red: #ff595e;
     --yellow: #ffca3a;
     --green: #8ac926;
     --blue: #1982c4;
     --purple: #6a4c93;
+    --purple-dark: #5c4280;
+    --light-gray: #e5e5e5;
+    --light-text-color: #F5EEFC;
     --main-font: 'Open Sans', sans-serif;
+    --alt-font: 'Montserrat', sans-serif;
 }
+
 
 body {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     font-family: var(--main-font);
     color: var(--main-text-color);
+    margin: 0;
+}
+
+header {
+    align-self: stretch;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 3rem;
+    padding: 10px;
+    background-color: var(--purple);
+}
+
+nav {
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.nav-item {
+    list-style: none;
+    padding: 15px 20px;
+    border-radius: 5px;
+}
+
+nav .active {
+    background-color: var(--purple-dark);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    /* align-items: center; */
+    min-width: 50%;
+}
+
+footer {
+    display: flex;
 }
 
 ul {
@@ -41,52 +87,7 @@ a {
     color: black;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */
-}
 
 label {
     margin-top: 10px;
-}
-
-input {
-    margin-bottom: 10px;
-}
-
-table {
-    border-collapse: collapse;
-    margin: 25px 0;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    min-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
-
-thead tr {
-    background-color: #373737;
-    color: #ffffff;
-    text-align: left;
-}
-
-th,
-td {
-    padding: 12px 15px;
-}
-
-.container {
-    align-self: stretch;
-}
-
-.show-element {
-    display: none;
-    background-color: #ffffff;
-    position: absolute;
-    height: 200px;
-    width: 200px;
-    left: calc(50vw - 200px);
-    top: calc(20vh);
-    border: 3px solid black;
-    padding: 15px;
 }

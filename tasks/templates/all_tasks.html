@@ -2,18 +2,11 @@
 
 {% block main %}
 
-{% if not tasks %}
-<p>No tasks to show </p>
-{% else %}
-
-
-
-{% include "components/task/searchbar.html" %}
+{% include "components/task/search.html" %}
 
 {% include "components/task/table_all.html" %}
 
-{% endif %}
 
-<button><a href="{% url 'add task'%}">Add task</a></button>
+<a class="purple-button" href="{% url 'add task'%}">Add task</a>
 
 {% endblock main %}
