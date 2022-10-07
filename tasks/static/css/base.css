@@ -4,8 +4,14 @@
 :root {
     --main-text-color: #10002B;
     --red: #ff595e;
+    --red-light: #ffc2c4;
+    --red-dark: #8f0005;
     --yellow: #ffca3a;
+    --yellow-light: #ffe499;
+    --yellow-dark: #b88700;
     --green: #8ac926;
+    --green-light: #d4efa9;
+    --green-dark: #537916;
     --blue: #1982c4;
     --purple: #6a4c93;
     --purple-dark: #5c4280;

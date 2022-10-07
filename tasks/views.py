@@ -3,7 +3,6 @@ Functions for Task Scheduler views
 """
 
 import datetime
-from multiprocessing import context
 from time import time
 import plotly.express as px
 import pandas as pd
@@ -27,20 +26,21 @@ def availability_exists():
     except ObjectDoesNotExist:
         return False
 
-def add_possible_deadlines(fig, tasks):
-    """
-    Gets possible deadlines
-    """
-    # tasks = reversed(tasks)
-    index = 0
+def get_possible_deadlines(tasks):
+    deadlines = []
     for task in tasks:
-        new = task.get_new_deadline() + datetime.timedelta(days=1)
-        if task.status != 'C':
-            fig.add_shape(type="line", y0=(index - 0.5), y1=(index + 0.5), x0=new, x1=new, line=dict(
-        color='#1982c4',
-        width=2,
-    ))
-        index+=1
+        old = task.deadline
+        new = task.get_new_deadline()
+        if task.status != 'C' and old != new:
+            deadlines.append({
+                'Task': task.description,
+                'Start': old + datetime.timedelta(days=1),
+                'Deadline': new,
+                'End': new + datetime.timedelta(days=1),
+                'Status': 'Overtime needed',
+                'Category': task.category.name
+            })
+    return deadlines
             
 def index(request):
     """
@@ -55,7 +55,7 @@ def index(request):
             'Not started': '#ff595e',
             'Ongoing': '#ffca3a',
             'Completed': '#8ac926',
-            'Possible finish date': '#1982c4',
+            'Overtime needed': 'rgba(255, 89, 94, 0.5)',
         }
         task_data = [
             {
@@ -67,8 +67,8 @@ def index(request):
                 'Category': task.category.name
             } for task in tasks
         ]
-
-        data_frame = pd.DataFrame((task_data))
+        deadlines = get_possible_deadlines(tasks)
+        data_frame = pd.DataFrame((task_data + deadlines))
         hover = {
             'Task': True,
             'Start': True,
@@ -77,17 +77,17 @@ def index(request):
             'Status': True,
             'Category': True
         }
-
-        fig = px.timeline(data_frame, x_start="Start", x_end="End", y="Task", color="Status",
-            color_discrete_map=colors, hover_data=hover, range_y=[0,len(tasks) - 1])
-        fig.update_yaxes(autorange="reversed")
+        week = (604800 * 1000)
         today = time() * 1000
+        fig = px.timeline(data_frame, x_start="Start", x_end="End", y="Task", color="Status",
+            color_discrete_map=colors, hover_data=hover, range_y=[0,len(tasks) - 1], range_x=[today - week, today + (week * 2)])
+        fig.update_yaxes(autorange="reversed")
+        start = datetime.date(2022, 9, 20)
+        end = datetime.date(2022, 10, 20)
         fig.add_vline(x=today, line_width=2, line_color="#10002B", 
             annotation={'text': 'Now', 'font': {'size': 14, 'color': '#10002B'}, 'yshift': 20, 'xshift': -15})
-        add_possible_deadlines(fig, tasks)
         chart = fig.to_html()
         context['data'] = chart
-        context['fig'] = fig
 
     return render(request, "timeline.html", context)
 
@@ -99,11 +99,6 @@ def add_task(request):
     """
     form = TaskForm()
     categories = Category.objects.all()
-    context = {
-        'form': form,
-        'categories': categories,
-        'title': 'Add task'
-    }
     if not availability_exists():
         messages.add_message(request, messages.ERROR, 'Please add your avalible hours \
             in Profile before adding a task')
@@ -126,6 +121,11 @@ def add_task(request):
             messages.add_message(request, messages.ERROR,\
                 f'Not enough time to complete task before deadline, \
                     next possible deadline is {suggested_deadline}')
+    context = {
+        'form': form,
+        'categories': categories,
+        'title': 'Add task'
+    }
     return render(request, "add_task.html", context)
 
 def search_tasks(request):
@@ -219,7 +219,7 @@ def update_task(request, task_id):
     updates task with requested id
     """
     task = Task.objects.get(id=task_id)
-    task_form = TaskForm(instance=task)
+    form = TaskForm(instance=task)
     if request.method == 'POST':
         form  = TaskForm(request.POST, instance=task)
         if form.is_valid():
@@ -232,7 +232,7 @@ def update_task(request, task_id):
             obj.category = category
             if obj.enough_time():
                 obj.save()
-                messages.add_message(request, messages.SUCCESS, 'Task was added sucessfully')
+                messages.add_message(request, messages.SUCCESS, 'Task was edited sucessfully')
                 return redirect('all tasks')
             suggested_deadline = obj.get_new_deadline()
             messages.add_message(request, messages.ERROR,\
@@ -241,7 +241,7 @@ def update_task(request, task_id):
     current_category = task.category
     categories = Category.objects.all()
     context = {
-        'form': task_form,
+        'form': form,
         'categories': categories,
         'current_category': current_category,
         'task': task}
@@ -257,6 +257,8 @@ def update_category(request, category_id):
         data = request.POST
         category.name = data['category']
         category.save()
+        messages.add_message(request, messages.SUCCESS,\
+                'Category edited successfully!')
         return redirect('all categories')
     return render(request, "update_category.html", {'category': category})
 
@@ -272,10 +274,14 @@ def profile(request):
             form = AvailabilityForm(request.POST, instance=availability)
             if form.is_valid():
                 form.save()
+                messages.add_message(request, messages.SUCCESS,\
+                'Availible hours edited successfully!')
     except ObjectDoesNotExist:
         form = AvailabilityForm()
         if request.method == 'POST':
             form = AvailabilityForm(request.POST)
             if form.is_valid():
                 form.save()
+                messages.add_message(request, messages.SUCCESS,\
+                'Availible hours added successfully!')
     return render(request, "profile.html", {"form": form})

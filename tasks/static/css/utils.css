@@ -56,3 +56,24 @@
 .clickable {
     cursor: pointer;
 }
+
+/* MESSAGES */
+.messages li {
+    padding: 5px;
+}
+
+.messages .success {
+    background-color: var(--green-light);
+    color: var(--green-dark);
+    border: 1px solid var(--green-dark);
+    border-radius: 0.5em;
+}
+
+.errorlist li,
+.messages .error {
+    background-color: var(--red-light);
+    color: var(--red-dark);
+    padding: 5px;
+    border: 1px solid var(--red-dark);
+    border-radius: 0.5em;
+}
