@@ -41,7 +41,6 @@ class Task(models.Model):
 
     duration_verbose = "Actual duration" if status == "C" else "Elapsed time"
     actual_duration = models.IntegerField(duration_verbose, default=0)
-    
 
     def get_date_range(self):
         """

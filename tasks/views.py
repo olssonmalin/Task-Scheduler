@@ -27,6 +27,10 @@ def availability_exists():
         return False
 
 def get_possible_deadlines(tasks):
+    """
+    Creates array of objects if overtime is needed
+    on any task
+    """
     deadlines = []
     for task in tasks:
         old = task.deadline
@@ -41,7 +45,7 @@ def get_possible_deadlines(tasks):
                 'Category': task.category.name
             })
     return deadlines
-            
+
 def index(request):
     """
     Index of task scheduler
@@ -80,12 +84,12 @@ def index(request):
         week = (604800 * 1000)
         today = time() * 1000
         fig = px.timeline(data_frame, x_start="Start", x_end="End", y="Task", color="Status",
-            color_discrete_map=colors, hover_data=hover, range_y=[0,len(tasks) - 1], range_x=[today - week, today + (week * 2)])
+            color_discrete_map=colors, hover_data=hover, range_y=[0,len(tasks) - 1],
+            range_x=[today - week, today + (week * 2)])
         fig.update_yaxes(autorange="reversed")
-        start = datetime.date(2022, 9, 20)
-        end = datetime.date(2022, 10, 20)
-        fig.add_vline(x=today, line_width=2, line_color="#10002B", 
-            annotation={'text': 'Now', 'font': {'size': 14, 'color': '#10002B'}, 'yshift': 20, 'xshift': -15})
+        fig.add_vline(x=today, line_width=2, line_color="#10002B",
+            annotation={'text': 'Now', 'font': {'size': 14, 'color': '#10002B'},
+            'yshift': 20, 'xshift': -15})
         chart = fig.to_html()
         context['data'] = chart
 
@@ -151,7 +155,7 @@ def show_tasks(request):
         tasks = search_tasks(request)
     else:
         tasks = Task.objects.all()
-    
+
     context = {
         'tasks': tasks,
         'title': "Tasks",
