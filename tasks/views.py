@@ -89,9 +89,6 @@ def index(request):
             color_discrete_map=colors, hover_data=hover, range_y=[0,len(tasks) - 1],
             range_x=[today - week, today + (week * 2)])
 
-        # Without x-range
-        # fig = px.timeline(data_frame, x_start="Start", x_end="End", y="Task", color="Status",
-        #     color_discrete_map=colors, hover_data=hover, range_y=[0,len(tasks) - 1])
         fig.update_yaxes(autorange="reversed")
         fig.add_vline(x=today, line_width=2, line_color="#10002B",
             annotation={'text': 'Now', 'font': {'size': 14, 'color': '#10002B'},
@@ -157,14 +154,20 @@ def show_tasks(request):
     """
     Renders template that shows all tasks as a list
     """
+    q_value = ""
+    status_value = ""
     if 'q' in request.GET:
         tasks = search_tasks(request)
+        q_value = request.GET['q']
+        status_value = request.GET['status']
     else:
         tasks = Task.objects.all()
 
     context = {
         'tasks': tasks,
         'title': "Tasks",
+        'q': q_value,
+        'status': status_value
     }
     return render(request, 'all_tasks.html', context)
 

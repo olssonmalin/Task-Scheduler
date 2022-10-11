@@ -1,15 +1,15 @@
 <form class="search-form">
     <div>
         <label for="q">Description or Category</label>
-        <input class="search" type="text" name="q">
+        <input class="search" type="text" name="q" value="{{ q }}">
     </div>
     <div>
         <label for="status">Status</label>
         <select class="search" name="status" id="status">
             <option value="">---</option>
-            <option value="NS">Not started</option>
-            <option value="OG">Ongoing</option>
-            <option value="C">Completed</option>
+            <option value="NS" {% if status == "NS" %} selected {% endif %}>Not started</option>
+            <option value="OG" {% if status == "OG" %} selected {% endif %}>Ongoing</option>
+            <option value="C" {% if status == "C" %} selected {% endif %}>Completed</option>
         </select>
     </div>
 

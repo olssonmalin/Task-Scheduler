@@ -83,6 +83,12 @@ class Task(models.Model):
             self.deadline = self.deadline + timedelta(days = 1)
         return self.deadline
 
+    def find_gap(self):
+        """
+        Find gap where ?
+        """
+        pass
+
     def avalible_hours(self):
         """
         Gets avalible hours based on user availability
@@ -139,11 +145,14 @@ class Task(models.Model):
         if not self.enough_time():
             raise ValidationError({'deadline': \
                 (f'Not enough time to complete task before deadline, \
-                    next possible deadline: {self.get_new_deadline()}')})
+                    next possible deadline: {self.get_new_deadline()}.')})
         return super().clean()
 
     def __str__(self) -> str:
         return self.description
+    
+    def __len__(self):
+        return len(self.get_date_range())
 
 
 class Availability(models.Model):
