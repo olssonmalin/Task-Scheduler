@@ -129,8 +129,7 @@ class Task(models.Model):
         if self.pk is None:
             if not self.enough_time():
                 raise ValidationError({'deadline': \
-                    (f'Not enough time to complete task before deadline, \
-                        next possible deadline: {self.get_new_deadline()}.'),
+                    (f'Next possible deadline: {self.get_new_deadline()}.'),
                         'start': (f'Possible start date: {self.get_new_start_date()}')})
         return super().clean()
 

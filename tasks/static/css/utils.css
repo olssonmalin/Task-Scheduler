@@ -93,6 +93,15 @@
     border-radius: 0.5em;
 }
 
+.errorlist li {
+    font-size: 14px;
+    margin: 0;
+}
+
+.errorlist {
+    padding: 0;
+}
+
 /* BUTTON CONTAINERS */
 
 .button-pair {

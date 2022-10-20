@@ -100,7 +100,8 @@ select {
 .task-form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    /* grid-template-rows: repeat(5, 1fr); */
+    grid-auto-rows: minmax(min-content, max-content);
     grid-column-gap: 15px;
     grid-row-gap: 15px;
     align-items: center;
@@ -113,6 +114,10 @@ select {
 .task-form div {
     display: flex;
     flex-direction: column;
+}
+
+.back {
+    margin-top: 1em;
 }
 
 /* FILE, CATEGORY, ADD HOURS FORM */
