@@ -6,7 +6,7 @@
             <option value="C" {% if status == "C" %} selected {% endif %}>Completed</option>
         </select>
     <div class="search-input input">
-        <input class="search" type="text" name="q" value="{{ q }}" placeholder="Description or category">
+        <input autocomplete="off" class="search" type="text" name="q" value="{{ q }}" placeholder="Description or category">
         <button class="search clickable" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 </form>
