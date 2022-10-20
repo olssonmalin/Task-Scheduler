@@ -70,7 +70,7 @@ footer {
     display: flex;
 }
 
-/* 
+
 ul {
     list-style-type: none;
     display: flex;
@@ -82,7 +82,7 @@ ul {
 ul li {
     display: flex;
     align-items: center;
-} */
+}
 
 
 label {

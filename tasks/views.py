@@ -124,7 +124,7 @@ def add_task(request):
     categories = Category.objects.all()
     current_category = ""
     if not availability_exists():
-        messages.add_message(request, messages.ERROR, 'Please add your avalible hours \
+        messages.add_message(request, messages.WARNING, 'Please add your avalible hours \
             in Profile before adding a task')
         return redirect('profile')
     if request.method == 'POST':
@@ -190,7 +190,11 @@ def import_tasks(request):
     Renders template that shows all tasks as a list
     """
     import_form = UploadFileForm()
-
+    
+    if not availability_exists():
+        messages.add_message(request, messages.WARNING, 'Please add your avalible hours \
+            in Profile before adding a task')
+        return redirect('profile')
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():

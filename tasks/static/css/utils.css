@@ -73,6 +73,13 @@
     border-radius: 0.5em;
 }
 
+.messages .warning {
+    background-color: var(--yellow-light);
+    color: var(--yellow-dark);
+    border: 1px solid var(--yellow-dark);
+    border-radius: 0.5em;
+}
+
 .errorlist li,
 .messages .error {
     background-color: var(--red-light);

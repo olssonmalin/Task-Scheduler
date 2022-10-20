@@ -16,15 +16,6 @@ thead tr {
     margin-bottom: 10px;
 }
 
-/* tr {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: 1fr;
-    grid-column-gap: 5em;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-} */
 
 .list-item,
 .list-item-head {
