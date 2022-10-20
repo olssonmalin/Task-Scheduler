@@ -13,18 +13,8 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Availability, Task, Category
-from .forms import AvailabilityForm, TaskForm
-
-def availability_exists():
-    """
-    Checks that availability hours
-    exists in database
-    """
-    try:
-        Availability.objects.get(id=1)
-        return True
-    except ObjectDoesNotExist:
-        return False
+from .forms import AvailabilityForm, TaskForm, UploadFileForm
+from .utils import handle_uploaded_file, get_category_object, availability_exists
 
 def get_possible_deadlines(tasks):
     """
@@ -32,9 +22,10 @@ def get_possible_deadlines(tasks):
     on any task
     """
     deadlines = []
+    ot_tasks = []
     for task in tasks:
         old = task.deadline
-        new = task.get_new_deadline()
+        new = task.get_new_deadline(None if not ot_tasks else ot_tasks)
         if task.status != 'C' and old != new:
             deadlines.append({
                 'Task': task.description,
@@ -42,21 +33,24 @@ def get_possible_deadlines(tasks):
                 'Deadline': new,
                 'End': new + datetime.timedelta(days=1),
                 'Status': 'Overtime needed',
-                'Category': task.category.name
+                'Category': task.category.name,
+                'Hours left': task.estimated_duration - task.actual_duration
             })
+            ot_tasks.append(task)
     return deadlines
 
 def index(request):
     """
     Index of task scheduler
     """
-    tasks = Task.objects.all()
-    context = {
-        'title': 'Timeline'
-    }
+    tasks = Task.objects.all().order_by('start', '-deadline')
+
+    context = {}
     if tasks:
+        week = (604800 * 1000)
+        today = time() * 1000
         colors = {
-            'Not started': '#ff595e',
+            'Not started': '#6c757d',
             'Ongoing': '#ffca3a',
             'Completed': '#8ac926',
             'Overtime needed': 'rgba(255, 89, 94, 0.5)',
@@ -70,26 +64,48 @@ def index(request):
                 'Status': task.get_status_display(),
                 'Category': task.category.name,
                 'Hours left': task.estimated_duration - task.actual_duration
-            } for task in tasks
+            } for task in tasks if task.deadline >= (datetime.date.today() - datetime.timedelta(days = 14) or task.status != 'C')
         ]
-        deadlines = get_possible_deadlines(tasks)
-        data_frame = pd.DataFrame((task_data + deadlines))
+        if Availability.objects.get(id=1).get_hour_per_week() > 0:
+            deadlines = get_possible_deadlines(tasks)
+            data_frame = pd.DataFrame((task_data + deadlines))
+        else:
+            data_frame = pd.DataFrame((task_data))
+            messages.add_message(request, messages.ERROR, "Not able to calculate overtime, 0 availible hours")
+
         hover = {
-            'Task': True,
-            'Start': True,
-            'Deadline': True,
+            'Task': False,
+            'Start': '|%b %e',
+            'Deadline': '|%b %e',
             'End': False,
             'Status': True,
             'Category': True,
             'Hours left': True
         }
-        week = (604800 * 1000)
-        today = time() * 1000
         fig = px.timeline(data_frame, x_start="Start", x_end="End", y="Task", color="Status",
-            color_discrete_map=colors, hover_data=hover, range_y=[0,len(tasks) - 1],
-            range_x=[today - week, today + (week * 2)])
-
-        fig.update_yaxes(autorange="reversed")
+            color_discrete_map=colors, hover_data=hover, hover_name="Task", range_y=[0,len(tasks) - 1],
+            range_x=[today - week, today + week])
+        fig.update_layout(dragmode='pan',
+        font_color='#10002B',
+        font_family='Montserrat',
+        title={
+            'text': "Task Timeline",
+            'xanchor': 'center',
+            'yanchor': 'top',
+            'y':1,
+            'x':0.3,
+            'font':{'size':28 }
+            }
+            )
+        fig.update_yaxes(autorange="reversed", title=None, automargin=True)
+        fig.update_xaxes(
+            tickformat="%a %e/%m \n w.%W",
+            type = 'date',
+            tickformatstops=(dict(dtickrange=[None, 604800000], value="%a %e/%m \n w.%W"),
+                dict(dtickrange=[604800000, "M1"], value="w.%W"),
+                dict(dtickrange=["M1", "M12"], value="%b %Y"),
+                dict(dtickrange=["M12", None], value="%Y Y"))
+        )
         fig.add_vline(x=today, line_width=2, line_color="#10002B",
             annotation={'text': 'Now', 'font': {'size': 14, 'color': '#10002B'},
             'yshift': 20, 'xshift': -15})
@@ -106,20 +122,17 @@ def add_task(request):
     """
     form = TaskForm()
     categories = Category.objects.all()
+    current_category = ""
     if not availability_exists():
         messages.add_message(request, messages.ERROR, 'Please add your avalible hours \
             in Profile before adding a task')
         return redirect('profile')
     if request.method == 'POST':
         form  = TaskForm(request.POST)
+        current_category = request.POST['category']
         if form.is_valid():
             obj = form.save(commit=False)
-            try:
-                category = Category.objects.get(name=request.POST['category'])
-            except ObjectDoesNotExist:
-                category = Category(name=request.POST['category'])
-                category.save()
-            obj.category = category
+            obj.category = get_category_object(request.POST['category'])
             if obj.enough_time():
                 obj.save()
                 messages.add_message(request, messages.SUCCESS, 'Task was added sucessfully')
@@ -131,6 +144,7 @@ def add_task(request):
     context = {
         'form': form,
         'categories': categories,
+        'current_category': current_category,
         'title': 'Add task'
     }
     return render(request, "add_task.html", context)
@@ -165,11 +179,28 @@ def show_tasks(request):
 
     context = {
         'tasks': tasks,
-        'title': "Tasks",
+        'title': "Task List",
         'q': q_value,
-        'status': status_value
+        'status': status_value,
     }
     return render(request, 'all_tasks.html', context)
+
+def import_tasks(request):
+    """
+    Renders template that shows all tasks as a list
+    """
+    import_form = UploadFileForm()
+
+    if request.method == "POST":
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request)
+
+    context = {
+        'title': "Import Tasks",
+        'import_form': import_form
+    }
+    return render(request, 'import_tasks.html', context)
 
 
 def show_categories(request):
@@ -190,7 +221,11 @@ def show_single_task(request, task_id=1):
     :param <int> id
     """
     task = Task.objects.get(id=task_id)
-    return render(request, "single_task.html", {'task': task})
+    context = {
+        'task': task,
+        'title': task.description
+    }
+    return render(request, "single_task.html", context)
 
 def add_time_task(request, task_id):
     """
@@ -237,27 +272,19 @@ def update_task(request, task_id):
         form  = TaskForm(request.POST, instance=task)
         if form.is_valid():
             obj = form.save(commit=False)
-            try:
-                category = Category.objects.get(name=request.POST['category'])
-            except ObjectDoesNotExist:
-                category = Category(name=request.POST['category'])
-                category.save()
-            obj.category = category
-            if obj.enough_time():
-                obj.save()
-                messages.add_message(request, messages.SUCCESS, 'Task was edited sucessfully')
-                return redirect('all tasks')
-            suggested_deadline = obj.get_new_deadline()
-            messages.add_message(request, messages.ERROR,\
-                f'Not enough time to complete task before deadline, \
-                    next possible deadline is {suggested_deadline}')
+            obj.category = get_category_object(request.POST['category'])
+            obj.save()
+            return redirect('all tasks')
+
     current_category = task.category
     categories = Category.objects.all()
     context = {
         'form': form,
         'categories': categories,
         'current_category': current_category,
-        'task': task}
+        'task': task,
+        'title': f'Update {task.description}'
+    }
     return render(request, "update_task.html", context)
 
 
@@ -297,4 +324,4 @@ def profile(request):
                 form.save()
                 messages.add_message(request, messages.SUCCESS,\
                 'Availible hours added successfully!')
-    return render(request, "profile.html", {"form": form})
+    return render(request, "profile.html", {"form": form, 'title': "Availability"})

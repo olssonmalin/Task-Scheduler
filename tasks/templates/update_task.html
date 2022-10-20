@@ -1,16 +1,19 @@
 {% extends "base.html" %}
 
 {% block main %}
-<form action="" method="POST" autocomplete="off">
+<form  class="task-form" action="" method="POST" autocomplete="off">
     {% csrf_token %}
-    {{form}}
+    {{form.as_div}}
+    <div>
     <label for="category">Category</label>
-    <input name="category" type="text" list="category" value="{{ current_category }}">
+    <input  class="input" name="category" type="text" list="category" value="{{ current_category }}">
     <datalist id="category">
         {% for cat in categories %}
         <option value="{{ cat.name }}"></option>
         {% endfor %}
     </datalist>
-    <input type="submit" class="purple-button" value="Submit">
+</div>
+    <a class="small-button" href="{% url 'all tasks'%}">Back</a>
+    <input type="submit" class="purple-button" value="Submit"> 
 </form>
 {% endblock %}

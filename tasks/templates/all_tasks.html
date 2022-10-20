@@ -2,11 +2,27 @@
 
 {% block main %}
 
+<div class="search-add-container">
+
 {% include "components/task/search.html" %}
+{% comment %} <a class="purple-button clickable" href="{% url 'add task'%}">Add task</a>
+<a class="small-button clickable" href="{% url 'import tasks'%}">Import task</a> {% endcomment %}
+
+<div>
+<a class="purple-button clickable" href="{% url 'add task'%}">
+    Add task
+</a>
+<a class="clickable" href="{% url 'import tasks'%}">
+    <i class="fa-solid fa-file-import" title="Import Tasks"></i>
+</a>
+</div>
+</div>
 
 {% include "components/task/table_all.html" %}
 
+{% if json %}
+    {{ json }}
+{% endif %}
 
-<a class="purple-button" href="{% url 'add task'%}">Add task</a>
 
 {% endblock main %}

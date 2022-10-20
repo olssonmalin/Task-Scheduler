@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block main %}
+<p>You can import multiple tasks by uploading a JSON or CSV file.</p>
+<p>The tasks should contain the following data:</p>
+
+<table class="table-auto">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Format</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Description</td>
+            <td>text</td>
+        </tr>
+        <tr>
+            <td>Category</td>
+            <td>text</td>
+        </tr>
+        <tr>
+            <td>Start date</td>
+            <td>yyyy-mm-dd</td>
+        </tr>
+        <tr>
+            <td>Deadline</td>
+            <td>yyyy-mm-dd</td>
+        </tr>
+        <tr>
+            <td>Estimated duration</td>
+            <td>Number (hours)</td>
+        </tr>
+        <tr>
+            <td>Elapsed duration</td>
+            <td>Number (hours)</td>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td>Not started, Ongoing or Completed</td>
+        </tr>
+    </tbody>
+</table>
+
+{% include "components/task/form/import.html"%}
+{% endblock %}

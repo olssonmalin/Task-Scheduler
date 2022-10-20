@@ -1,6 +1,6 @@
 <table class="table-auto">
     <thead>
-        <tr>
+        <tr class="list-item-head">
             <th>Description</th>
             <th>Category</th>
             <th>Status</th>
@@ -19,7 +19,7 @@
             <td class="list-item-buttons">
                 {% include "components/task/delete.html" %}
                 <a href="{% url 'update task' task.id %}">
-                    <i title="Edit category" class="fa-solid fa-pen-to-square"></i>
+                    <i title="Edit task" class="fa-solid fa-pen-to-square"></i>
                 </a>
                 {% include "components/task/form/add_time.html" %}
             </td>

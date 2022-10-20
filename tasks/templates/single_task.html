@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 
 {% block main %}
-
 <div>
-    <h2>{{ task.description }}</h2>
     <h3>{{ task.category }}</h3>
     <table>
         <tbody>
@@ -29,8 +27,16 @@
             </tr>
         </tbody>
     </table>
-
-    <button><a href="{% url 'all tasks'%}">Back</a></button>
+    <div class="button-pair">
+    <a class="small-button" href="{% url 'all tasks'%}">Back</a>
+    <div class="button-pair-icons">
+        {% include "components/task/delete.html" %}
+        <a href="{% url 'update task' task.id %}">
+            <i title="Edit task" class="fa-solid fa-pen-to-square"></i>
+        </a>
+        {% include "components/task/form/add_time.html" %}
+    </div>
+    <div>
 </div>
 
 {% endblock %}

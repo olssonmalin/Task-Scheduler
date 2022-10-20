@@ -54,84 +54,66 @@ class Task(models.Model):
         days = [start + timedelta(days=i) for i in range(delta.days + 1)]
         return days
 
-    def get_avg_per_day(self):
+    def is_in_range(self, date_range):
         """
-        Gets avarage amount of hours needed to spend
-        on current task to complete on time
+        Check is task is scheduled in provided date range
         """
-        days = len(self.get_date_range())
-        hours_left = self.estimated_duration - self.actual_duration
-        return hours_left/days
-
-    def get_hours_range(self, date_range):
-        """
-        Gets hours scheduled to spend on task
-        within given date range
-        """
-        saved_range = self.get_date_range()
-        total = 0
+        self_range = self.get_date_range()
         for day in date_range:
-            if day in saved_range:
-                total += self.get_avg_per_day()
-        return total
+            if day in self_range:
+                return True
+        return False
 
-    def get_new_deadline(self):
+    def get_new_deadline(self, tasks=None):
         """
         Finds new possible deadline for task
         """
-        while not self.enough_time():
+        while not self.enough_time(tasks):
             self.deadline = self.deadline + timedelta(days = 1)
         return self.deadline
 
-    def find_gap(self):
+    def get_new_start_date(self):
         """
         Find gap where ?
         """
-        pass
+        self.start = self.deadline
+        while not self.enough_time():
+            self.start = self.start - timedelta(days = 1)
+        return self.start
 
-    def avalible_hours(self):
+    def avalible_hours(self, date_range=None):
         """
         Gets avalible hours based on user availability
         during current tasks date range
         """
+        if date_range is None:
+            date_range = self.get_date_range()
         availability = Availability.objects.get(id=1).as_list()
         hours = 0
-        for day in self.get_date_range():
+        for day in date_range:
             hours += availability[day.weekday()]
         return hours
 
-    def time_left(self):
-        """
-        Chacks avalible time left during current tasks date-range
-        including paralell tasks
-        @return: float
-        """
-        all_tasks = __class__.objects.exclude(id=self.id)
-        available_time = self.avalible_hours()
-        date_range = self.get_date_range()
-        for task in all_tasks:
-            if task.status == "C":
-                continue
-            available_time -= task.get_hours_range(date_range)
-        total = (available_time - self.estimated_duration) + self.actual_duration
-        return total
 
-    def enough_time(self):
+    def enough_time(self, all_tasks=None):
         """
         Checks if there is enough avalible time to schedule task
         @return: bool
         """
-        if self.time_left() >= 0:
-            return True
-
-        all_tasks = __class__.objects.exclude(id=self.id)
-
+        hours_left = self.estimated_duration - self.actual_duration
+        if self.avalible_hours() - hours_left < 0:
+            return False
+        if all_tasks is None:
+            all_tasks = __class__.objects.exclude(id=self.id).order_by('deadline')
+        self_range = self.get_date_range()
         for task in all_tasks:
-            if task.status == "C":
-                continue
-            if task.time_left() - self.estimated_duration >= 0:
-                return True
-        return False
+            if task.is_in_range(self_range) and task.status != 'C':
+                task_range = task.get_date_range()
+                self_range.extend(x for x in task_range if x not in self_range)
+                hours_left += (task.estimated_duration - task.actual_duration)
+                if (self.avalible_hours(self_range) - hours_left) < 0:
+                    return False
+        return True
 
     def clean(self) -> None:
         """
@@ -141,18 +123,21 @@ class Task(models.Model):
         if self.deadline < self.start:
             raise ValidationError({'deadline': ('Deadline may not be prior to start date')})
 
-        # Ensure there is enough avalible time to schedule new task/update existing task
-        if not self.enough_time():
-            raise ValidationError({'deadline': \
-                (f'Not enough time to complete task before deadline, \
-                    next possible deadline: {self.get_new_deadline()}.')})
+        # Ensure there is enough avalible time to schedule new task
+        if self.pk is None:
+            if not self.enough_time():
+                raise ValidationError({'deadline': \
+                    (f'Not enough time to complete task before deadline, \
+                        next possible deadline: {self.get_new_deadline()}.'),
+                        'start': (f'Possible start date: {self.get_new_start_date()}')})
         return super().clean()
 
     def __str__(self) -> str:
         return self.description
-    
+
     def __len__(self):
         return len(self.get_date_range())
+
 
 
 class Availability(models.Model):
@@ -187,6 +172,13 @@ class Availability(models.Model):
             self.saturday,
             self.sunday
         ]
+    
+    def get_hour_per_week(self):
+        """
+        Returns total amount of availible hours
+        per week
+        """
+        return sum(self.as_list())
 
     def save(self, *args, **kwargs):
         """

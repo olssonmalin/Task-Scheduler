@@ -1,0 +1,6 @@
+
+<form class="small-form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ import_form }}
+    <input type="submit" value="Import" class="purple-button">
+</form>

@@ -15,6 +15,7 @@
     --blue: #1982c4;
     --purple: #6a4c93;
     --purple-dark: #5c4280;
+    --gray: #6c757d;
     --light-gray: #e5e5e5;
     --light-text-color: #F5EEFC;
     --main-font: 'Open Sans', sans-serif;
@@ -63,13 +64,13 @@ main {
     flex-direction: column;
     align-self: center;
     /* align-items: center; */
-    min-width: 50%;
 }
 
 footer {
     display: flex;
 }
 
+/* 
 ul {
     list-style-type: none;
     display: flex;
@@ -81,17 +82,7 @@ ul {
 ul li {
     display: flex;
     align-items: center;
-}
-
-p,
-a {
-    margin-right: 5px;
-    /* text-decoration: none; */
-}
-
-a {
-    color: black;
-}
+} */
 
 
 label {

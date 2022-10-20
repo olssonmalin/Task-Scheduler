@@ -3,7 +3,7 @@
 <i title="Add elapsed time to task" class="fa-solid fa-plus click-button-show clickable"></i>
 {% endblock %}
 {% block content %}
-<form method="POST" class="add-time-form" action="{% url 'add time' task.id %}">
+<form method="POST" class="add-time-form small-form" action="{% url 'add time' task.id %}">
     {% csrf_token %}
     <label for="hours">Add elapsed time</label>
     <input class="input" type="number" name="hours" value="0" min="0">

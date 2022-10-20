@@ -1,17 +1,12 @@
 <form class="search-form">
-    <div>
-        <label for="q">Description or Category</label>
-        <input class="search" type="text" name="q" value="{{ q }}">
-    </div>
-    <div>
-        <label for="status">Status</label>
         <select class="search" name="status" id="status">
-            <option value="">---</option>
+            <option class="default-option"value="">Any status</option>
             <option value="NS" {% if status == "NS" %} selected {% endif %}>Not started</option>
             <option value="OG" {% if status == "OG" %} selected {% endif %}>Ongoing</option>
             <option value="C" {% if status == "C" %} selected {% endif %}>Completed</option>
         </select>
+    <div class="search-input input">
+        <input class="search" type="text" name="q" value="{{ q }}" placeholder="Description or category">
+        <button class="search clickable" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
-
-    <input type="submit" value="Search" class="purple-button search">
 </form>

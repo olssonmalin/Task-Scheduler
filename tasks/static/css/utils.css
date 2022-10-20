@@ -43,7 +43,11 @@
     background-color: #ffffff;
     border: 2px solid var(--purple);
     cursor: pointer;
+    font-size: 12px;
     text-align: center;
+    width: fit-content;
+    text-decoration: none;
+    padding: 5px;
     border-radius: .25rem;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
@@ -76,4 +80,26 @@
     padding: 5px;
     border: 1px solid var(--red-dark);
     border-radius: 0.5em;
+}
+
+/* BUTTON CONTAINERS */
+
+.button-pair {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    justify-content: space-between;
+}
+
+.button-pair i {
+    font-size: 22px;
+    padding: 5px;
+    color: var(--purple-dark);
+}
+
+.button-pair-icons {
+    display: flex;
+    align-items: center;
 }

@@ -16,3 +16,4 @@ for (element of clickShowContainers) {
     buttonShow.addEventListener("click", show);
     buttonClose.addEventListener("click", close);
 };
+

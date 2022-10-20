@@ -1,15 +1,16 @@
-<form action="" method="POST" autocomplete="off">
-    {% if info %}
-    <pre>{{ info }}</pre>
-    {% endif %}
+<form action="" class="task-form" method="POST" autocomplete="off">
     {% csrf_token %}
-    {{form}}
+    {{form.as_div}}
+    <div>
     <label for="category">Category</label>
-    <input name="category" type="text" list="category" required>
+    <input  class="input"name="category" type="text" list="category" value="{{ current_category}}" required>
     <datalist id="category">
         {% for cat in categories %}
         <option value="{{ cat.name }}"></option>
         {% endfor %}
     </datalist>
-    <input type="submit" class="purple-button" value="Submit">
-</form>
+    </div>
+
+    <input type="submit" class="purple-button submit" value="Submit">
+</form> 
+<a class="small-button" href="{% url 'all tasks'%}">Back</a>

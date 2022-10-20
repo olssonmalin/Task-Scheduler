@@ -13,11 +13,32 @@ thead tr {
     font-family: var(--alt-font);
     font-size: 24;
     font-weight: 400;
+    margin-bottom: 10px;
 }
 
-th,
-td {
-    padding: 12px 15px;
+/* tr {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 5em;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+} */
+
+.list-item,
+.list-item-head {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 5em;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+td p {
+    margin: 0;
 }
 
 .container {
@@ -27,7 +48,8 @@ td {
 .list-item {
     height: 3em;
     color: var(--main-text-color);
-    padding: 15px;
+    padding: 15px 0px;
+    margin-bottom: 20px;
 }
 
 .list-item a {
@@ -59,7 +81,7 @@ td {
 }
 
 .list-item .NS {
-    background-color: var(--red);
+    background-color: var(--gray);
 }
 
 .list-item .OG {
@@ -72,10 +94,43 @@ td {
 
 .list-item-buttons {
     display: flex;
+    justify-self: start;
 }
 
 /* CATEGORY */
 
 table .category {
     width: auto;
+}
+
+/* TIMELINE */
+
+.js-plotly-plot,
+.plot-container,
+.svg-container,
+.main-svg {
+    min-width: 80vw !important;
+    min-height: 80vh !important;
+    overflow-y: 'scroll';
+    overflow-x: 'scroll';
+}
+
+/* ALL TASKS */
+
+.search-add-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-add-container i {
+    color: var(--purple);
+}
+
+.search-add-container a {
+    text-decoration: none;
+}
+
+.search-add-container .fa-file-import {
+    font-size: 24px;
 }
