@@ -175,7 +175,7 @@ def show_tasks(request):
         q_value = request.GET['q']
         status_value = request.GET['status']
     else:
-        tasks = Task.objects.all()
+        tasks = Task.objects.all().order_by('-status', 'deadline')
 
     context = {
         'tasks': tasks,

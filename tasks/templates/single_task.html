@@ -5,24 +5,24 @@
     <h3>{{ task.category }}</h3>
     <table>
         <tbody>
-            <tr>
-                <td>Start date:</td>
+            <tr class="table-row" >
+                <td>Start date</td>
                 <td>{{ task.start }}</td>
             </tr>
-            <tr>
-                <td>Deadline:</td>
+            <tr class="table-row" >
+                <td>Deadline</td>
                 <td>{{ task.deadline }}</td>
             </tr>
-            <tr>
-                <td>Status:</td>
+            <tr class="table-row" >
+                <td>Status</td>
                 <td>{{ task.get_status_display }}</td>
             </tr>
-            <tr>
-                <td>Estimated duration:</td>
+            <tr class="table-row" >
+                <td>Estimated duration</td>
                 <td>{{ task.estimated_duration }}</td>
             </tr>
-            <tr>
-                <td>Actual duration:</td>
+            <tr class="table-row" >
+                <td>Actual duration</td>
                 <td>{{ task.actual_duration }}</td>
             </tr>
         </tbody>

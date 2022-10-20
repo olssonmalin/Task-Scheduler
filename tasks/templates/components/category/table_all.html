@@ -7,10 +7,9 @@
         {% for category in categories %}
         <tr class="list-item">
             <td class="name">{{ category.name }}</td>
-            <td class="list-item-buttons">{% include "components/category/delete.html" %}
-                <a href="{% url 'update category' category.id %}">
-                    <i title="Edit category" class="fa-solid fa-pen-to-square"></i>
-                </a>
+            <td class="list-item-buttons">
+                {% include "components/category/delete.html" %}
+                {% include "components/category/update_category.html" %}
             </td>
         </tr>
         {% endfor %}

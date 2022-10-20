@@ -20,6 +20,21 @@ def get_category_object(name):
         category.save()
     return category
 
+def get_status(status):
+    """
+    Gets Category model object if exists or create a new Category object
+    """
+    match status.lower():
+        case "not started":
+            return "NS"
+        case "ongoing":
+            return "OG"
+        case "completed":
+            return "C"
+        case _:
+            return "NS"
+
+
 def has_correct_structure(data):
     """
     Check that data has correct structure
@@ -33,7 +48,7 @@ def add_task_from_dict(task):
     """
     Adds tasks from a dict
     """
-    start_date = list(map(int, task['deadline'].split('-')))
+    start_date = list(map(int, task['start date'].split('-')))
     deadline = list(map(int, task['deadline'].split('-')))
     new_task = Task(
         description = task['description'],
@@ -41,7 +56,8 @@ def add_task_from_dict(task):
         deadline = date(deadline[2], deadline[1], deadline[0]),
         estimated_duration = int(task['estimated duration']),
         actual_duration = int(task['elapsed time']),
-        category=get_category_object(task['category'])
+        category=get_category_object(task['category']),
+        status=get_status(task['status'])
     )
     if new_task.enough_time():
         new_task.save()

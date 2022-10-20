@@ -16,6 +16,15 @@ thead tr {
     margin-bottom: 10px;
 }
 
+.table-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 30px;
+    grid-row-gap: 0px;
+    margin-bottom: 10px;
+}
+
 
 .list-item,
 .list-item-head {

@@ -1,0 +1,12 @@
+{% extends "utils/popup.html" %}
+{% block button %}
+<i title="Edit category" class="fa-solid fa-pen-to-square click-button-show clickable"></i>
+{% endblock %}
+{% block content %}
+<form class="small-form" action="{% url 'update category' category.id %}" method="POST" autocomplete="off">
+    {% csrf_token %}
+    <label for="category">Update name</label>
+    <input class="input" name="category" type="text" value="{{ category.name }}">
+    <input class="input" type="submit" class="purple-button" value="Submit">
+</form>
+{% endblock %}

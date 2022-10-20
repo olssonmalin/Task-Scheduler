@@ -100,6 +100,8 @@ class Task(models.Model):
         Checks if there is enough avalible time to schedule task
         @return: bool
         """
+        if self.status == "C":
+            return True
         hours_left = self.estimated_duration - self.actual_duration
         if self.avalible_hours() - hours_left < 0:
             return False
