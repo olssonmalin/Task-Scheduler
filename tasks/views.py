@@ -71,7 +71,7 @@ def index(request):
             data_frame = pd.DataFrame((task_data + deadlines))
         else:
             data_frame = pd.DataFrame((task_data))
-            messages.add_message(request, messages.ERROR, "Not able to calculate overtime, 0 availible hours")
+            messages.add_message(request, messages.ERROR, "Not able to calculate overtime, 0 Available hours")
 
         hover = {
             'Task': False,
@@ -124,7 +124,7 @@ def add_task(request):
     categories = Category.objects.all()
     current_category = ""
     if not availability_exists():
-        messages.add_message(request, messages.WARNING, 'Please add your avalible hours \
+        messages.add_message(request, messages.WARNING, 'Please add your available hours \
             in Profile before adding a task')
         return redirect('profile')
     if request.method == 'POST':
@@ -192,7 +192,7 @@ def import_tasks(request):
     import_form = UploadFileForm()
     
     if not availability_exists():
-        messages.add_message(request, messages.WARNING, 'Please add your avalible hours \
+        messages.add_message(request, messages.WARNING, 'Please add your available hours \
             in Profile before adding a task')
         return redirect('profile')
     if request.method == "POST":
@@ -319,7 +319,7 @@ def profile(request):
             if form.is_valid():
                 form.save()
                 messages.add_message(request, messages.SUCCESS,\
-                'Availible hours edited successfully!')
+                'Available hours edited successfully!')
     except ObjectDoesNotExist:
         form = AvailabilityForm()
         if request.method == 'POST':
@@ -327,5 +327,5 @@ def profile(request):
             if form.is_valid():
                 form.save()
                 messages.add_message(request, messages.SUCCESS,\
-                'Availible hours added successfully!')
+                'Available hours added successfully!')
     return render(request, "profile.html", {"form": form, 'title': "Availability"})
