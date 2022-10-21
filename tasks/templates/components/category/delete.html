@@ -8,7 +8,10 @@
 
     </p>
     <p>All tasks in this category will also be deleted </p>
+
+    <div class="continue-cancel">
     <a href="{% url 'all categories'%}">Cancel</a>
     <a href="{% url 'remove category' category.id %}">Continue</a>
+    </div>
 </div>
 {% endblock %}

@@ -101,7 +101,7 @@ def handle_uploaded_file(request):
     if len(schdueled) > 0:
         messages.add_message(request, messages.SUCCESS,
             f'The following tasks were scheduled: {", ".join(schdueled)}')
-    
+
 def availability_exists():
     """
     Checks that availability hours

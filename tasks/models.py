@@ -173,7 +173,7 @@ class Availability(models.Model):
             self.saturday,
             self.sunday
         ]
-    
+
     def get_hour_per_week(self):
         """
         Returns total amount of availible hours

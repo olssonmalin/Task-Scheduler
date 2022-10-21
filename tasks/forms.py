@@ -23,14 +23,13 @@ class TaskForm(forms.ModelForm):
             'deadline': forms.DateInput(attrs={'class': 'input',
                 'placeholder': 'Select a date', 'type': 'date'})
         }
-    
+
     def __init__(self, *args, **kwargs):
-        super(TaskForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['description'].widget.attrs.update({'class': 'input'})
         self.fields['estimated_duration'].widget.attrs.update({'class': 'input'})
         self.fields['actual_duration'].widget.attrs.update({'class': 'input'})
         self.fields['status'].widget.attrs.update({'class': 'input'})
-
 
 class AvailabilityForm(forms.ModelForm):
     """
@@ -42,9 +41,9 @@ class AvailabilityForm(forms.ModelForm):
         """
         model = Availability
         fields = "__all__"
-    
+
     def __init__(self, *args, **kwargs):
-        super(AvailabilityForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['monday'].widget.attrs.update({'class': 'input'})
         self.fields['tuesday'].widget.attrs.update({'class': 'input'})
         self.fields['wednesday'].widget.attrs.update({'class': 'input'})

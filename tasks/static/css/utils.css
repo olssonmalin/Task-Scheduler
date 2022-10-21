@@ -123,3 +123,9 @@
     display: flex;
     align-items: center;
 }
+
+.continue-cancel {
+    margin-top: 2em;
+    display: flex;
+    justify-content: space-between;
+}

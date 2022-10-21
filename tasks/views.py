@@ -64,14 +64,17 @@ def index(request):
                 'Status': task.get_status_display(),
                 'Category': task.category.name,
                 'Hours left': task.estimated_duration - task.actual_duration
-            } for task in tasks if task.deadline >= (datetime.date.today() - datetime.timedelta(days = 14) or task.status != 'C')
+            } for task in tasks if task.deadline >= \
+                (datetime.date.today() - datetime.timedelta(days = 14)
+                or task.status != 'C')
         ]
         if Availability.objects.get(id=1).get_hour_per_week() > 0:
             deadlines = get_possible_deadlines(tasks)
             data_frame = pd.DataFrame((task_data + deadlines))
         else:
             data_frame = pd.DataFrame((task_data))
-            messages.add_message(request, messages.ERROR, "Not able to calculate overtime, 0 Available hours")
+            messages.add_message(request, messages.ERROR,
+                "Not able to calculate overtime, 0 Available hours")
 
         hover = {
             'Task': False,
@@ -83,7 +86,8 @@ def index(request):
             'Hours left': True
         }
         fig = px.timeline(data_frame, x_start="Start", x_end="End", y="Task", color="Status",
-            color_discrete_map=colors, hover_data=hover, hover_name="Task", range_y=[0,len(tasks) - 1],
+            color_discrete_map=colors, hover_data=hover,
+            hover_name="Task", range_y=[0,len(tasks) - 1],
             range_x=[today - week, today + week])
         fig.update_layout(dragmode='pan',
         font_color='#10002B',
@@ -190,7 +194,7 @@ def import_tasks(request):
     Renders template that shows all tasks as a list
     """
     import_form = UploadFileForm()
-    
+
     if not availability_exists():
         messages.add_message(request, messages.WARNING, 'Please add your available hours \
             in Profile before adding a task')

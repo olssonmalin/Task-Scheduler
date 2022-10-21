@@ -3,7 +3,6 @@ Test module for Tasks
 """
 import datetime
 import time
-import unittest
 from django.test import TestCase
 from .models import Availability, Category, Task
 
@@ -13,13 +12,18 @@ class TestAvailability(TestCase):
     """
 
     def test_route_is_ok_show(self):
-
+        """
+        Tests route profile is ok
+        """
         response = self.client.get('/profile/')
 
         # Check that the response is 200 OK.
         self.assertEqual(response.status_code, 200)
-    
+
     def test_route_is_ok_add(self):
+        """
+        Tests add availability
+        """
 
         availability = {
             'monday': 8,
@@ -46,12 +50,12 @@ class TestTask(TestCase):
     """
     Tests for Task model
     """
-    
+
     def add_availability(self):
         """
         Adds availability
         """
-        Availability.objects.create(monday=8, 
+        Availability.objects.create(monday=8,
             tuesday=8,
             wednesday=8,
             thursday=8,
@@ -86,20 +90,29 @@ class TestTask(TestCase):
         return task.id
 
     def test_route_is_ok_all(self):
-
+        """
+        Tests all tasks route is ok
+        """
         response = self.client.get('/task/all')
 
         # Check that the response is 200 OK.
         self.assertEqual(response.status_code, 200)
 
     def test_redirect_no_availability(self):
+        """
+        Tests redirect to profile if
+        user tries to add task without availability
+        """
 
         response = self.client.get('/task/add')
 
         # Check that the response is 200 OK.
         self.assertRedirects(response, '/profile/')
-    
+
     def test_route_add(self):
+        """
+        Tests add task
+        """
 
         self.add_availability()
 
@@ -128,7 +141,7 @@ class TestTask(TestCase):
             'start': '2022-10-18',
             'deadline': '2022-10-18',
             'status': 'NS',
-            'estimated_duration': 8,
+            'estimated_duration': 0,
             'actual_duration': 0
         }
         t_before = time.time()
@@ -139,7 +152,7 @@ class TestTask(TestCase):
 
         self.assertLess(total, 2)
         self.assertRedirects(response, '/task/all')
-    
+
     def test_show_task_route_ok(self):
         """
         Asserts that show task
@@ -181,4 +194,3 @@ class TestCategory(TestCase):
 
         # Check route is ok
         self.assertEqual(response.status_code, 200)
-
