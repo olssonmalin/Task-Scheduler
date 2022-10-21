@@ -10,7 +10,7 @@ Make sure to have python3 and pip installed
 
 <pre>$ pip install -r requirements.txt </pre>
 
-### Migarte database
+### Migrate database
 
 <pre>$ python3 manage.py makemigrations</pre>
 
